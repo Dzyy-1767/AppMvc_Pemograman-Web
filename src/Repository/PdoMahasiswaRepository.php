@@ -51,6 +51,28 @@ class PdoMahasiswaRepository implements MahasiswaRepository
     }
 
     /**
+     * Cari mahasiswa berdasarkan ID menggunakan prepared statement.
+     */
+    public function find(int $id): ?Mahasiswa
+    {
+        $sql  = 'SELECT id, nim, nama, prodi FROM mahasiswa WHERE id = :id';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        $baris = $stmt->fetch();
+
+        if ($baris === false) {
+            return null;
+        }
+
+        return new Mahasiswa(
+            id:    (int) $baris['id'],
+            nim:   $baris['nim'],
+            nama:  $baris['nama'],
+            prodi: $baris['prodi'],
+        );
+    }
+
+    /**
      * Simpan mahasiswa baru menggunakan prepared statement.
      */
     public function save(Mahasiswa $m): void
@@ -67,12 +89,74 @@ class PdoMahasiswaRepository implements MahasiswaRepository
     /**
      * Periksa apakah NIM sudah digunakan menggunakan prepared statement.
      */
-    public function existsByNim(string $nim): bool
+    public function existsByNim(string $nim, ?int $kecualiId = null): bool
     {
-        $sql  = 'SELECT 1 FROM mahasiswa WHERE nim = :nim LIMIT 1';
+        $sql = 'SELECT 1 FROM mahasiswa WHERE nim = :nim';
+        if ($kecualiId !== null) {
+            $sql .= ' AND id <> :kecuali_id';
+        }
+        $sql .= ' LIMIT 1';
+
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['nim' => $nim]);
+        $parameter = ['nim' => $nim];
+        if ($kecualiId !== null) {
+            $parameter['kecuali_id'] = $kecualiId;
+        }
+        $stmt->execute($parameter);
 
         return $stmt->fetchColumn() !== false;
+    }
+
+    /**
+     * Perbarui data mahasiswa menggunakan prepared statement.
+     */
+    public function update(Mahasiswa $m): void
+    {
+        $id = $m->getId();
+        if ($id === null) {
+            throw new \InvalidArgumentException('ID mahasiswa wajib diisi untuk pembaruan.');
+        }
+
+        $sql = 'UPDATE mahasiswa SET nim = :nim, nama = :nama, prodi = :prodi WHERE id = :id';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'nim'   => $m->getNim(),
+            'nama'  => $m->getNama(),
+            'prodi' => $m->getProdi(),
+            'id'    => $id,
+        ]);
+    }
+
+    /**
+     * Hapus mahasiswa hanya jika tidak memiliki data nilai.
+     */
+    public function delete(int $id): void
+    {
+        $this->pdo->beginTransaction();
+
+        try {
+            $stmt = $this->pdo->prepare('SELECT id FROM mahasiswa WHERE id = :id FOR UPDATE');
+            $stmt->execute(['id' => $id]);
+            if ($stmt->fetchColumn() === false) {
+                $this->pdo->commit();
+                return;
+            }
+
+            $stmt = $this->pdo->prepare('SELECT 1 FROM nilai WHERE mahasiswa_id = :id LIMIT 1');
+            $stmt->execute(['id' => $id]);
+            if ($stmt->fetchColumn() !== false) {
+                throw new \DomainException('Mahasiswa masih memiliki data nilai.');
+            }
+
+            $stmt = $this->pdo->prepare('DELETE FROM mahasiswa WHERE id = :id');
+            $stmt->execute(['id' => $id]);
+            $this->pdo->commit();
+        } catch (\Throwable $e) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            throw $e;
+        }
     }
 }
