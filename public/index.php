@@ -8,6 +8,8 @@
 
 declare(strict_types=1);
 
+session_start();
+
 // ── 1. Autoload PSR-4 (semua kelas namespace UMM\Pemweb\) ─────────────────
 require dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -20,7 +22,10 @@ $router = new Router();
 // ── 3. Daftarkan rute ─────────────────────────────────────────────────────
 $router->get('/mahasiswa', [MahasiswaController::class, 'index']);
 $router->get('/mahasiswa/tambah', [MahasiswaController::class, 'tambah']);
+$router->get('/mahasiswa/edit', [MahasiswaController::class, 'edit']);
 $router->post('/mahasiswa/simpan', [MahasiswaController::class, 'simpan']);
+$router->post('/mahasiswa/update', [MahasiswaController::class, 'update']);
+$router->post('/mahasiswa/hapus', [MahasiswaController::class, 'hapus']);
 
 // ── 4. Ambil URI tanpa query string, normalkan trailing slash ─────────────
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
