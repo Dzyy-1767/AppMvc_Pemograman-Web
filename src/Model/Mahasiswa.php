@@ -12,13 +12,13 @@ namespace UMM\Pemweb\Model;
 class Mahasiswa
 {
     /**
-     * @param int    $id    Primary key
+     * @param ?int   $id    Primary key; null untuk data baru
      * @param string $nim   Nomor Induk Mahasiswa (unik)
      * @param string $nama  Nama lengkap mahasiswa
      * @param string $prodi Program studi
      */
     public function __construct(
-        private readonly int    $id,
+        private readonly ?int   $id,
         private readonly string $nim,
         private readonly string $nama,
         private readonly string $prodi,
@@ -26,7 +26,7 @@ class Mahasiswa
 
     // ── Getter ────────────────────────────────────────────────────────────
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -46,4 +46,3 @@ class Mahasiswa
         return $this->prodi;
     }
 }
-
