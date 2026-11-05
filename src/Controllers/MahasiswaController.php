@@ -85,9 +85,11 @@ class MahasiswaController
             }
         }
 
-        $repository = new PdoMahasiswaRepository();
-        if (!isset($errors['nim']) && $repository->existsByNim($oldInput['nim'])) {
-            $errors['nim'] = 'NIM sudah digunakan.';
+        if ($errors === []) {
+            $repository = new PdoMahasiswaRepository();
+            if ($repository->existsByNim($oldInput['nim'])) {
+                $errors['nim'] = 'NIM sudah digunakan.';
+            }
         }
 
         if ($errors !== []) {
