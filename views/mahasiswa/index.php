@@ -16,6 +16,10 @@
             <?= htmlspecialchars($judul, ENT_QUOTES, 'UTF-8') ?>
         </h2>
 
+        <p class="aksi-tambah">
+            <a class="tombol-tambah" href="/mahasiswa/tambah">Tambah Mahasiswa</a>
+        </p>
+
         <?php if (empty($daftarMahasiswa)): ?>
             <p class="empty-msg">Belum ada data mahasiswa.</p>
         <?php else: ?>
@@ -49,6 +53,22 @@
         <?php endif; ?>
 
 <style>
+    .aksi-tambah {
+        margin-bottom: 1rem;
+        text-align: right;
+    }
+
+    .tombol-tambah {
+        display: inline-block;
+        padding: .55rem 1rem;
+        border-radius: 5px;
+        background-color: #1a56db;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .tombol-tambah:hover { background-color: #1648b8; }
+
     /* ── Tabel ────────────────────────────────────────────────────────── */
     .tabel-mahasiswa {
         width: 100%;
@@ -94,4 +114,3 @@
 </style>
 
 <?php require dirname(__DIR__) . '/layout/footer.php'; ?>
-

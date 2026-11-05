@@ -145,6 +145,8 @@ Browser (HTML halaman daftar mahasiswa)
 | Method | URI | Keterangan |
 |--------|-----|------------|
 | GET | `/mahasiswa` | Daftar semua mahasiswa |
+| GET | `/mahasiswa/tambah` | Form tambah mahasiswa |
+| POST | `/mahasiswa/simpan` | Validasi dan simpan mahasiswa baru |
 
 ---
 
@@ -170,6 +172,15 @@ curl -o /dev/null -s -w "%{http_code}" http://localhost:8000/sembarang
 # output: 404
 ```
 
+### Uji tambah mahasiswa
+
+1. Buka <http://localhost:8000/mahasiswa>, lalu pilih **Tambah Mahasiswa**.
+2. Isi NIM angka yang belum digunakan (maksimal 20 karakter), nama, dan program studi; simpan. Browser harus kembali ke `/mahasiswa` dan data baru muncul satu kali.
+3. Kirim form kosong; respons harus `422` dan tampil pesan wajib isi untuk setiap field.
+4. Coba NIM yang sudah terdaftar; form harus menampilkan pesan bahwa NIM sudah digunakan.
+5. Coba NIM yang mengandung huruf atau lebih dari 20 karakter; form harus menampilkan pesan validasi NIM.
+6. Refresh halaman daftar setelah penyimpanan; data tidak bertambah lagi (pola Post/Redirect/Get).
+
 ---
 
 ## Konvensi Kode
@@ -179,4 +190,3 @@ curl -o /dev/null -s -w "%{http_code}" http://localhost:8000/sembarang
 - Query SQL: **selalu prepared statement** (tidak ada string SQL langsung dengan input user)
 - View: hanya HTML + `htmlspecialchars()`, tanpa SQL dan logika bisnis
 - Controller: tipis, hanya orkestrasi antara Repository dan View
-

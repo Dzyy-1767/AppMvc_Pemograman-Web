@@ -49,5 +49,30 @@ class PdoMahasiswaRepository implements MahasiswaRepository
 
         return $hasil;
     }
-}
 
+    /**
+     * Simpan mahasiswa baru menggunakan prepared statement.
+     */
+    public function save(Mahasiswa $m): void
+    {
+        $sql  = 'INSERT INTO mahasiswa (nim, nama, prodi) VALUES (:nim, :nama, :prodi)';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'nim'   => $m->getNim(),
+            'nama'  => $m->getNama(),
+            'prodi' => $m->getProdi(),
+        ]);
+    }
+
+    /**
+     * Periksa apakah NIM sudah digunakan menggunakan prepared statement.
+     */
+    public function existsByNim(string $nim): bool
+    {
+        $sql  = 'SELECT 1 FROM mahasiswa WHERE nim = :nim LIMIT 1';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['nim' => $nim]);
+
+        return $stmt->fetchColumn() !== false;
+    }
+}
