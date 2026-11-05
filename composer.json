@@ -1,0 +1,17 @@
+{
+    "name": "umm/pemweb-mvc",
+    "description": "Sistem Informasi Nilai Mahasiswa - PHP MVC tanpa framework (Tugas Pemrograman Web)",
+    "type": "project",
+    "require": {
+        "php": ">=8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "UMM\\Pemweb\\": "src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}
+

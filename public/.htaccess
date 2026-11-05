@@ -1,0 +1,11 @@
+# Aktifkan mod_rewrite
+Options -MultiViews
+RewriteEngine On
+
+# Jika request merujuk ke file yang nyata (gambar, css, js), lewati
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Semua request lain diteruskan ke front controller
+RewriteRule ^ index.php [L]
+
