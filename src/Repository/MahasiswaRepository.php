@@ -21,5 +21,14 @@ interface MahasiswaRepository
      * @return Mahasiswa[] Array objek Mahasiswa (kosong jika tidak ada data)
      */
     public function all(): array;
-}
 
+    /**
+     * Simpan mahasiswa baru.
+     */
+    public function save(Mahasiswa $m): void;
+
+    /**
+     * Periksa apakah NIM sudah digunakan.
+     */
+    public function existsByNim(string $nim): bool;
+}
