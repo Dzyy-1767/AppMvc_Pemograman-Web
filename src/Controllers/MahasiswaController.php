@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace UMM\Pemweb\Controllers;
 
 use UMM\Pemweb\Repository\PdoMahasiswaRepository;
+use UMM\Pemweb\Model\Mahasiswa;
 
 class MahasiswaController
 {
@@ -41,5 +42,79 @@ class MahasiswaController
         $judul = 'Daftar Mahasiswa';
         require dirname(__DIR__, 2) . '/views/mahasiswa/index.php';
     }
-}
 
+    /**
+     * Menampilkan form tambah mahasiswa.
+     *
+     * GET /mahasiswa/tambah
+     */
+    public function tambah(): void
+    {
+        $judul    = 'Tambah Mahasiswa';
+        $oldInput = ['nim' => '', 'nama' => '', 'prodi' => ''];
+        $errors   = [];
+
+        require dirname(__DIR__, 2) . '/views/mahasiswa/tambah.php';
+    }
+
+    /**
+     * Memvalidasi dan menyimpan mahasiswa baru.
+     *
+     * POST /mahasiswa/simpan
+     */
+    public function simpan(): void
+    {
+        $oldInput = [
+            'nim'   => $this->nilaiPost('nim'),
+            'nama'  => $this->nilaiPost('nama'),
+            'prodi' => $this->nilaiPost('prodi'),
+        ];
+        $errors = [];
+
+        if ($oldInput['nim'] === '') {
+            $errors['nim'] = 'NIM wajib diisi.';
+        } elseif (!ctype_digit($oldInput['nim'])) {
+            $errors['nim'] = 'NIM hanya boleh berisi angka.';
+        } elseif (strlen($oldInput['nim']) > 20) {
+            $errors['nim'] = 'NIM maksimal 20 karakter.';
+        }
+
+        foreach (['nama' => 'Nama', 'prodi' => 'Program studi'] as $field => $label) {
+            if ($oldInput[$field] === '') {
+                $errors[$field] = $label . ' wajib diisi.';
+            }
+        }
+
+        $repository = new PdoMahasiswaRepository();
+        if (!isset($errors['nim']) && $repository->existsByNim($oldInput['nim'])) {
+            $errors['nim'] = 'NIM sudah digunakan.';
+        }
+
+        if ($errors !== []) {
+            http_response_code(422);
+            $judul = 'Tambah Mahasiswa';
+            require dirname(__DIR__, 2) . '/views/mahasiswa/tambah.php';
+            return;
+        }
+
+        $repository->save(new Mahasiswa(
+            id: null,
+            nim: $oldInput['nim'],
+            nama: $oldInput['nama'],
+            prodi: $oldInput['prodi'],
+        ));
+
+        header('Location: /mahasiswa');
+        exit;
+    }
+
+    /**
+     * Ambil input POST berupa teks dan hapus spasi di awal serta akhir.
+     */
+    private function nilaiPost(string $kunci): string
+    {
+        $nilai = $_POST[$kunci] ?? '';
+
+        return is_string($nilai) ? trim($nilai) : '';
+    }
+}

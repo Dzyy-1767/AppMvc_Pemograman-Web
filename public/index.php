@@ -19,6 +19,8 @@ $router = new Router();
 
 // ── 3. Daftarkan rute ─────────────────────────────────────────────────────
 $router->get('/mahasiswa', [MahasiswaController::class, 'index']);
+$router->get('/mahasiswa/tambah', [MahasiswaController::class, 'tambah']);
+$router->post('/mahasiswa/simpan', [MahasiswaController::class, 'simpan']);
 
 // ── 4. Ambil URI tanpa query string, normalkan trailing slash ─────────────
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -26,4 +28,3 @@ $uri = rtrim($uri, '/') ?: '/';
 
 // ── 5. Dispatch ke controller yang sesuai ─────────────────────────────────
 $router->dispatch($_SERVER['REQUEST_METHOD'], $uri);
-
