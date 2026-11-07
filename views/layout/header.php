@@ -71,6 +71,51 @@
             padding-bottom: .6rem;
             border-bottom: 2px solid #e8ecf5;
         }
+
+        .aksi-tambah { margin-bottom: 1rem; text-align: right; }
+        .tombol-tambah {
+            display: inline-block;
+            padding: .55rem 1rem;
+            border-radius: 5px;
+            background-color: #1a56db;
+            color: #fff;
+            text-decoration: none;
+        }
+        .tombol-tambah:hover { background-color: #1648b8; }
+
+        .field { margin-bottom: 1rem; }
+        .field label {
+            display: block;
+            margin-bottom: .35rem;
+            font-weight: 600;
+        }
+        .field input, .field select {
+            width: 100%;
+            padding: .65rem .75rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 5px;
+            font: inherit;
+            background: #fff;
+        }
+        .error { margin-top: .25rem; color: #b42318; font-size: .9rem; }
+        .aksi-form {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .aksi-form a { color: #1a56db; }
+        .aksi-form button {
+            padding: .6rem 1rem;
+            border: 0;
+            border-radius: 5px;
+            background-color: #1a56db;
+            color: #fff;
+            font: inherit;
+            cursor: pointer;
+        }
+        .empty-msg { color: #888; font-style: italic; }
     </style>
 </head>
 <body>
@@ -78,8 +123,12 @@
 <nav>
     <a class="brand" href="/">SINILAI</a>
     <a class="<?= ($menuAktif ?? '') === 'beranda' ? 'active' : '' ?>" href="/" <?= ($menuAktif ?? '') === 'beranda' ? 'aria-current="page"' : '' ?>>Beranda</a>
-    <a class="<?= ($menuAktif ?? '') === 'mahasiswa' ? 'active' : '' ?>" href="/mahasiswa" <?= ($menuAktif ?? '') === 'mahasiswa' ? 'aria-current="page"' : '' ?>>Mahasiswa</a>
-    <a class="<?= ($menuAktif ?? '') === 'nilai' ? 'active' : '' ?>" href="/nilai" <?= ($menuAktif ?? '') === 'nilai' ? 'aria-current="page"' : '' ?>>Nilai</a>
+    <?php if (($menuAktif ?? '') !== 'mahasiswa-form'): ?>
+        <a class="<?= ($menuAktif ?? '') === 'mahasiswa' ? 'active' : '' ?>" href="/mahasiswa" <?= ($menuAktif ?? '') === 'mahasiswa' ? 'aria-current="page"' : '' ?>>Mahasiswa</a>
+    <?php endif; ?>
+    <?php if (($menuAktif ?? '') !== 'nilai-form'): ?>
+        <a class="<?= ($menuAktif ?? '') === 'nilai' ? 'active' : '' ?>" href="/nilai" <?= ($menuAktif ?? '') === 'nilai' ? 'aria-current="page"' : '' ?>>Nilai</a>
+    <?php endif; ?>
 </nav>
 
 <div class="container">

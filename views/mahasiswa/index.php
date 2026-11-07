@@ -45,30 +45,9 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
-
-        <p class="jumlah-data">
-            Total: <strong><?= count($daftarMahasiswa) ?></strong> mahasiswa terdaftar.
-        </p>
-
         <?php endif; ?>
 
 <style>
-    .aksi-tambah {
-        margin-bottom: 1rem;
-        text-align: right;
-    }
-
-    .tombol-tambah {
-        display: inline-block;
-        padding: .55rem 1rem;
-        border-radius: 5px;
-        background-color: #1a56db;
-        color: #fff;
-        text-decoration: none;
-    }
-
-    .tombol-tambah:hover { background-color: #1648b8; }
-
     /* ── Tabel ────────────────────────────────────────────────────────── */
     .tabel-mahasiswa {
         width: 100%;
@@ -100,17 +79,6 @@
 
     .tabel-mahasiswa td.center { text-align: center; }
 
-    /* ── Pesan tambahan ───────────────────────────────────────────────── */
-    .jumlah-data {
-        color: #555;
-        font-size: .9rem;
-        margin-top: .5rem;
-    }
-
-    .empty-msg {
-        color: #888;
-        font-style: italic;
-    }
 </style>
 
 <?php require dirname(__DIR__) . '/layout/footer.php'; ?>
