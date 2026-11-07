@@ -62,3 +62,114 @@ if (tombolMenu && navigasi && overlayMenu) {
 
     batasTablet.addEventListener('change', bersihkanMenuMobile);
 }
+
+const sembunyikanSisiKartu = (sisi, sembunyi) => {
+    sisi.setAttribute('aria-hidden', String(sembunyi));
+    if ('inert' in sisi) {
+        sisi.inert = sembunyi;
+    }
+
+    sisi.querySelectorAll('a, button, input, select, textarea, [tabindex]').forEach((elemen) => {
+        if (sembunyi) {
+            if (elemen.dataset.tabindexDisimpan !== 'true') {
+                elemen.dataset.tabindexAwal = elemen.getAttribute('tabindex') ?? '';
+                elemen.dataset.tabindexDisimpan = 'true';
+            }
+            elemen.setAttribute('tabindex', '-1');
+        } else if (elemen.dataset.tabindexDisimpan === 'true') {
+            if (elemen.dataset.tabindexAwal === '') {
+                elemen.removeAttribute('tabindex');
+            } else {
+                elemen.setAttribute('tabindex', elemen.dataset.tabindexAwal);
+            }
+            delete elemen.dataset.tabindexAwal;
+            delete elemen.dataset.tabindexDisimpan;
+        }
+    });
+};
+
+const tutupKartu = (kartu, kembalikanFokus = false) => {
+    const pemicu = kartu.querySelector('[data-kartu-pemicu]');
+    const sisiDepan = kartu.querySelector('[data-kartu-depan]');
+    const sisiBelakang = kartu.querySelector('[data-kartu-belakang]');
+    const tombolKembali = kartu.querySelector('[data-kartu-kembali]');
+
+    kartu.classList.remove('kartu--balik');
+    pemicu.setAttribute('aria-expanded', 'false');
+    sembunyikanSisiKartu(sisiDepan, false);
+    sembunyikanSisiKartu(sisiBelakang, true);
+    tombolKembali.hidden = false;
+
+    if (kembalikanFokus) {
+        pemicu.focus();
+    }
+};
+
+const bukaKartu = (kartu) => {
+    const kartuTerbuka = document.querySelector('[data-kartu-flip].kartu--balik');
+    if (kartuTerbuka && kartuTerbuka !== kartu) {
+        tutupKartu(kartuTerbuka);
+    }
+
+    const pemicu = kartu.querySelector('[data-kartu-pemicu]');
+    const sisiDepan = kartu.querySelector('[data-kartu-depan]');
+    const sisiBelakang = kartu.querySelector('[data-kartu-belakang]');
+    const tombolKembali = kartu.querySelector('[data-kartu-kembali]');
+
+    kartu.classList.add('kartu--balik');
+    pemicu.setAttribute('aria-expanded', 'true');
+    sembunyikanSisiKartu(sisiDepan, true);
+    sembunyikanSisiKartu(sisiBelakang, false);
+    tombolKembali.hidden = false;
+    sisiBelakang.querySelector('a, button')?.focus();
+};
+
+document.querySelectorAll('[data-daftar-kartu]').forEach((daftar) => {
+    daftar.querySelectorAll('[data-kartu-flip]').forEach((kartu) => {
+        const pemicu = kartu.querySelector('[data-kartu-pemicu]');
+        pemicu.setAttribute('role', 'button');
+        pemicu.setAttribute('tabindex', '0');
+        pemicu.setAttribute('aria-expanded', 'false');
+        sembunyikanSisiKartu(kartu.querySelector('[data-kartu-depan]'), false);
+        sembunyikanSisiKartu(kartu.querySelector('[data-kartu-belakang]'), true);
+        kartu.querySelector('[data-kartu-kembali]').hidden = false;
+    });
+
+    daftar.addEventListener('click', (event) => {
+        const pemicu = event.target.closest('[data-kartu-pemicu]');
+        if (pemicu && daftar.contains(pemicu)) {
+            bukaKartu(pemicu.closest('[data-kartu-flip]'));
+            return;
+        }
+
+        const tombolKembali = event.target.closest('[data-kartu-kembali]');
+        if (tombolKembali && daftar.contains(tombolKembali)) {
+            tutupKartu(tombolKembali.closest('[data-kartu-flip]'), true);
+        }
+    });
+
+    daftar.addEventListener('keydown', (event) => {
+        const pemicu = event.target.closest('[data-kartu-pemicu]');
+        if (pemicu && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault();
+            bukaKartu(pemicu.closest('[data-kartu-flip]'));
+        }
+    });
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        const kartuTerbuka = document.querySelector('[data-kartu-flip].kartu--balik');
+        if (kartuTerbuka) {
+            event.preventDefault();
+            tutupKartu(kartuTerbuka, true);
+        }
+    }
+});
+
+document.addEventListener('click', (event) => {
+    const kartuTerbuka = document.querySelector('[data-kartu-flip].kartu--balik');
+    if (kartuTerbuka && !kartuTerbuka.contains(event.target)) {
+        tutupKartu(kartuTerbuka);
+    }
+});
