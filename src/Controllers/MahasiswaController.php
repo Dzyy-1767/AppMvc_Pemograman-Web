@@ -22,25 +22,32 @@ class MahasiswaController
      */
     public function index(): void
     {
-        // ── 1. Ambil data dari repository ─────────────────────────────────
         $repository  = new PdoMahasiswaRepository();
-        $daftarObjek = $repository->all();   // array objek Mahasiswa
-
-        // ── 2. Ubah ke array asosiatif siap tampil ────────────────────────
-        //      View tidak perlu tahu tentang kelas Mahasiswa
+        $paletAvatar = ['aksen', 'grade-a', 'grade-b', 'mustard', 'grade-e'];
         $daftarMahasiswa = array_map(
-            fn($mhs) => [
-                'id'    => $mhs->getId(),
-                'nim'   => $mhs->getNim(),
-                'nama'  => $mhs->getNama(),
-                'prodi' => $mhs->getProdi(),
-            ],
-            $daftarObjek
+            static function (Mahasiswa $mhs) use ($paletAvatar): array {
+                $nama = trim($mhs->getNama());
+                preg_match('/^./us', $nama, $hurufPertama);
+                $inisial = strtoupper($hurufPertama[0] ?? '?');
+                $warna = hexdec(substr(hash('crc32b', strtolower($inisial)), 0, 7))
+                    % count($paletAvatar);
+
+                return [
+                    'id' => $mhs->getId(),
+                    'nim' => $mhs->getNim(),
+                    'nama' => $mhs->getNama(),
+                    'prodi' => $mhs->getProdi(),
+                    'inisial' => $inisial,
+                    'kelas_avatar' => 'avatar--' . $paletAvatar[$warna],
+                ];
+            },
+            $repository->all()
         );
 
-        // ── 3. Teruskan ke view ───────────────────────────────────────────
         $judul = 'Daftar Mahasiswa';
+        $deskripsiHalaman = 'Kelola data mahasiswa dan identitas akademiknya.';
         $menuAktif = 'mahasiswa';
+        $aksiUtama = ['label' => 'Tambah Mahasiswa', 'href' => '/mahasiswa/tambah'];
         $flash = $_SESSION['flash'] ?? null;
         unset($_SESSION['flash']);
         require dirname(__DIR__, 2) . '/views/mahasiswa/index.php';
@@ -54,6 +61,7 @@ class MahasiswaController
     public function tambah(): void
     {
         $judul    = 'Tambah Mahasiswa';
+        $deskripsiHalaman = 'Lengkapi identitas mahasiswa untuk menyimpan data baru.';
         $menuAktif = 'mahasiswa-form';
         $mahasiswaId = null;
         $oldInput = ['nim' => '', 'nama' => '', 'prodi' => ''];
@@ -76,6 +84,7 @@ class MahasiswaController
         }
 
         $judul = 'Edit Mahasiswa';
+        $deskripsiHalaman = 'Perbarui identitas mahasiswa yang dipilih.';
         $menuAktif = 'mahasiswa-form';
         $mahasiswaId = $id;
         $oldInput = [
@@ -112,6 +121,7 @@ class MahasiswaController
         if ($errors !== []) {
             http_response_code(422);
             $judul = 'Tambah Mahasiswa';
+            $deskripsiHalaman = 'Lengkapi identitas mahasiswa untuk menyimpan data baru.';
             $menuAktif = 'mahasiswa-form';
             $mahasiswaId = null;
             require dirname(__DIR__, 2) . '/views/mahasiswa/tambah.php';
@@ -156,6 +166,7 @@ class MahasiswaController
         if ($errors !== []) {
             http_response_code(422);
             $judul = 'Edit Mahasiswa';
+            $deskripsiHalaman = 'Perbarui identitas mahasiswa yang dipilih.';
             $menuAktif = 'mahasiswa-form';
             $mahasiswaId = $id;
             require dirname(__DIR__, 2) . '/views/mahasiswa/tambah.php';
