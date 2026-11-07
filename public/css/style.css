@@ -173,6 +173,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
 }
 
+.button[hidden] {
+    display: none;
+}
+
 .aksi-utama,
 .button-primary {
     background: var(--aksen);
@@ -368,6 +372,132 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .kartu-nilai:hover {
     transform: translateY(-2px);
     border-color: var(--aksen);
+}
+
+.kartu-sisi-belakang {
+    margin-top: 1.1rem;
+    border-top: 1px solid var(--garis);
+    padding-top: .9rem;
+}
+
+.js .kartu-flip {
+    perspective: 1000px;
+    border: 0;
+    padding: 0;
+    background: transparent;
+}
+
+.js .kartu-flip:hover {
+    border-color: transparent;
+}
+
+.js .kartu-flip:hover .kartu-sisi {
+    border-color: var(--aksen);
+}
+
+.js .kartu-flip-dalam {
+    display: grid;
+    min-width: 0;
+    transform-style: preserve-3d;
+    transition: transform 550ms cubic-bezier(.2, .7, .2, 1);
+}
+
+.js .kartu-sisi {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    grid-area: 1 / 1;
+    border: 1px solid var(--garis);
+    border-radius: 10px;
+    padding: 1.1rem;
+    background: var(--kartu);
+    backface-visibility: hidden;
+    pointer-events: none;
+}
+
+.js .kartu-sisi-depan {
+    pointer-events: auto;
+}
+
+.js .kartu-sisi-belakang {
+    margin-top: 0;
+    border-top: 1px solid var(--garis);
+    padding-top: 1.1rem;
+    transform: rotateY(180deg);
+}
+
+.js .kartu--balik .kartu-sisi-depan {
+    pointer-events: none;
+}
+
+.js .kartu--balik .kartu-sisi-belakang {
+    pointer-events: auto;
+}
+
+.js .kartu--balik .kartu-flip-dalam {
+    transform: rotateY(180deg);
+}
+
+.js .kartu-pemicu {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    align-items: stretch;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.js .kartu-pemicu:focus-visible {
+    border-radius: 4px;
+    outline: 3px solid var(--mustard);
+    outline-offset: 3px;
+}
+
+.petunjuk-flip {
+    display: none;
+}
+
+.js .petunjuk-flip {
+    margin-top: auto;
+    padding-top: 1rem;
+    color: var(--tinta-pudar);
+    font-size: .8rem;
+    text-align: right;
+}
+
+.ringkasan-aksi-kartu {
+    margin: .25rem 0 0;
+    overflow-wrap: anywhere;
+    color: var(--tinta);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.js .kartu-sisi-belakang .aksi-kartu {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .6rem;
+}
+
+.js .kartu-sisi-belakang .aksi-kartu > * {
+    min-width: 0;
+}
+
+.js .kartu-sisi-belakang .aksi-kartu .button {
+    width: 100%;
+    min-height: 44px;
+}
+
+.js .kartu-sisi-belakang [data-kartu-kembali] {
+    grid-column: 1 / -1;
 }
 
 .identitas-mahasiswa {
@@ -811,5 +941,33 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
         animation-duration: .01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: .01ms !important;
+    }
+
+    .js .kartu-flip-dalam {
+        transform: none !important;
+    }
+
+    .js .kartu-sisi-depan {
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 150ms ease, visibility 150ms ease !important;
+    }
+
+    .js .kartu-sisi-belakang {
+        transform: none;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 150ms ease, visibility 150ms ease !important;
+    }
+
+    .js .kartu--balik .kartu-sisi-belakang {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .js .kartu--balik .kartu-sisi-depan {
+        opacity: 0;
+        visibility: hidden;
     }
 }
