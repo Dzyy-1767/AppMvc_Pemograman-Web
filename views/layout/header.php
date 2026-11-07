@@ -8,17 +8,29 @@
 </head>
 <body>
 <div class="app-shell">
-    <aside class="sidebar" aria-label="Navigasi utama">
+    <header class="sidebar">
         <a class="brand" href="/">SINILAI</a>
-        <nav class="nav-list" aria-label="Menu utama">
-            <a class="nav-link <?= ($menuAktif ?? '') === 'beranda' ? 'active' : '' ?>"
-               href="/" <?= ($menuAktif ?? '') === 'beranda' ? 'aria-current="page"' : '' ?>>Beranda</a>
-            <a class="nav-link <?= in_array($menuAktif ?? '', ['mahasiswa', 'mahasiswa-form'], true) ? 'active' : '' ?>"
-               href="/mahasiswa" <?= in_array($menuAktif ?? '', ['mahasiswa', 'mahasiswa-form'], true) ? 'aria-current="page"' : '' ?>>Mahasiswa</a>
-            <a class="nav-link <?= in_array($menuAktif ?? '', ['nilai', 'nilai-form'], true) ? 'active' : '' ?>"
-               href="/nilai" <?= in_array($menuAktif ?? '', ['nilai', 'nilai-form'], true) ? 'aria-current="page"' : '' ?>>Nilai</a>
+        <button class="menu-toggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="main-navigation">
+            <span class="menu-toggle-icon" aria-hidden="true"></span>
+        </button>
+        <nav class="nav-panel" id="main-navigation" aria-label="Navigasi utama">
+            <ul class="nav-list">
+                <li>
+                    <a class="nav-link <?= ($menuAktif ?? '') === 'beranda' ? 'active' : '' ?>"
+                       href="/" <?= ($menuAktif ?? '') === 'beranda' ? 'aria-current="page"' : '' ?>>Beranda</a>
+                </li>
+                <li>
+                    <a class="nav-link <?= in_array($menuAktif ?? '', ['mahasiswa', 'mahasiswa-form'], true) ? 'active' : '' ?>"
+                       href="/mahasiswa" <?= in_array($menuAktif ?? '', ['mahasiswa', 'mahasiswa-form'], true) ? 'aria-current="page"' : '' ?>>Mahasiswa</a>
+                </li>
+                <li>
+                    <a class="nav-link <?= in_array($menuAktif ?? '', ['nilai', 'nilai-form'], true) ? 'active' : '' ?>"
+                       href="/nilai" <?= in_array($menuAktif ?? '', ['nilai', 'nilai-form'], true) ? 'aria-current="page"' : '' ?>>Nilai</a>
+                </li>
+            </ul>
         </nav>
-    </aside>
+    </header>
+    <div class="nav-overlay" data-menu-overlay aria-hidden="true"></div>
 
     <div class="main-content">
         <header class="page-header">
