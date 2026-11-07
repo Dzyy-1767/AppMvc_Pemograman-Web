@@ -50,6 +50,14 @@ class PdoMahasiswaRepository implements MahasiswaRepository
         return $hasil;
     }
 
+    public function jumlah(): int
+    {
+        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM mahasiswa');
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
+    }
+
     /**
      * Simpan mahasiswa baru menggunakan prepared statement.
      */

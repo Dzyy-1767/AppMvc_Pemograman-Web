@@ -46,6 +46,14 @@ class PdoNilaiRepository implements NilaiRepository
         return $hasil;
     }
 
+    public function jumlah(): int
+    {
+        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM nilai');
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
+    }
+
     public function findById(int $id): ?Nilai
     {
         $stmt = $this->pdo->prepare(

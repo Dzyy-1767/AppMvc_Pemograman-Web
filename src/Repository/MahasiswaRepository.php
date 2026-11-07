@@ -22,6 +22,8 @@ interface MahasiswaRepository
      */
     public function all(): array;
 
+    public function jumlah(): int;
+
     /**
      * Simpan mahasiswa baru.
      */
