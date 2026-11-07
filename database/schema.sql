@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS nilai (
 -- Data contoh mahasiswa (3 baris)
 -- ------------------------------------------------------------
 INSERT INTO mahasiswa (nim, nama, prodi) VALUES
-    ('2pemweb02310370311001', 'Andi Pratama',    'Teknik Informatika'),
+    ('202310370311001', 'Andi Pratama',    'Teknik Informatika'),
     ('202310370311002', 'Siti Rahayu',     'Sistem Informasi'),
     ('202310370311003', 'Budi Santoso',    'Teknik Informatika');
 
