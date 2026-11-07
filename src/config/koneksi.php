@@ -26,10 +26,9 @@ $opsi = [
 try {
     $pdo = new PDO($dsn, $username, $password, $opsi);
 } catch (\PDOException $e) {
-    // Hentikan aplikasi dan tampilkan pesan error (jangan tampilkan detail di production)
+    error_log('Koneksi database gagal: ' . $e->getMessage());
     http_response_code(500);
-    exit('Koneksi database gagal: ' . $e->getMessage());
+    exit('Layanan database sedang tidak tersedia. Coba lagi nanti.');
 }
 
 return $pdo;
-

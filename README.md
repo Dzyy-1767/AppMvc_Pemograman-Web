@@ -114,8 +114,13 @@ app-mvc/
    ├─ layout/
    │  ├─ header.php
    │  └─ footer.php
-   └─ mahasiswa/
-      └─ index.php
+   ├─ mahasiswa/
+   │  ├─ index.php
+   │  ├─ tambah.php (form tambah dan edit)
+   │  └─ tidak-ditemukan.php
+   └─ nilai/
+      ├─ index.php
+      └─ tambah.php
 ```
 
 ---
@@ -153,6 +158,9 @@ Browser (HTML halaman daftar mahasiswa)
 | GET | `/mahasiswa` | Daftar semua mahasiswa |
 | GET | `/mahasiswa/tambah` | Form tambah mahasiswa |
 | POST | `/mahasiswa/simpan` | Validasi dan simpan mahasiswa baru |
+| GET | `/mahasiswa/edit?id={id}` | Form edit mahasiswa |
+| POST | `/mahasiswa/update` | Validasi dan perbarui mahasiswa |
+| POST | `/mahasiswa/hapus` | Hapus mahasiswa tanpa nilai terkait |
 | GET | `/nilai` | Daftar nilai dan grade mahasiswa |
 | GET | `/nilai/tambah` | Form tambah nilai |
 | GET | `/nilai/edit?id={id}` | Form edit nilai |
@@ -194,6 +202,17 @@ curl -o /dev/null -s -w "%{http_code}" http://localhost:8000/sembarang
 4. Coba NIM yang sudah terdaftar; form harus menampilkan pesan bahwa NIM sudah digunakan.
 5. Coba NIM yang mengandung huruf atau lebih dari 20 karakter; form harus menampilkan pesan validasi NIM.
 6. Refresh halaman daftar setelah penyimpanan; data tidak bertambah lagi (pola Post/Redirect/Get).
+
+### Uji edit dan hapus mahasiswa
+
+1. Pilih **Edit** pada daftar, ubah data dengan NIM angka yang belum digunakan, lalu simpan; daftar menampilkan pesan sukses.
+2. Edit data dengan NIM milik mahasiswa lain; form harus menolak NIM duplikat.
+3. Edit dengan field kosong; respons harus `422` dan pesan kesalahan tampil dengan nilai lama tetap terisi.
+4. Simpan edit tanpa mengubah NIM; perubahan harus berhasil.
+5. Buka <http://localhost:8000/mahasiswa/edit?id=99999>; respons harus `404` dengan pesan **Data tidak ditemukan**.
+6. Hapus mahasiswa tanpa data nilai; data harus hilang dari daftar.
+7. Hapus mahasiswa yang memiliki data nilai; penghapusan harus ditolak dan pesan bahwa data nilainya harus dihapus lebih dahulu tampil.
+8. Refresh daftar setelah update atau hapus; aksi tidak boleh dijalankan ulang.
 
 ---
 

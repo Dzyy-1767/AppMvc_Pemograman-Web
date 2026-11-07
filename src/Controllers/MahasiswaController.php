@@ -10,19 +10,19 @@ declare(strict_types=1);
 
 namespace UMM\Pemweb\Controllers;
 
-use UMM\Pemweb\Repository\PdoMahasiswaRepository;
+use PDOException;
 use UMM\Pemweb\Model\Mahasiswa;
+use UMM\Pemweb\Repository\PdoMahasiswaRepository;
 
 class MahasiswaController
 {
+    private ?PdoMahasiswaRepository $repository = null;
+
     /**
      * Menampilkan daftar seluruh mahasiswa.
-     *
-     * GET /mahasiswa
      */
     public function index(): void
     {
-        $repository  = new PdoMahasiswaRepository();
         $paletAvatar = ['aksen', 'grade-a', 'grade-b', 'mustard', 'grade-e'];
         $daftarMahasiswa = array_map(
             static function (Mahasiswa $mhs) use ($paletAvatar): array {
@@ -41,7 +41,7 @@ class MahasiswaController
                     'kelas_avatar' => 'avatar--' . $paletAvatar[$warna],
                 ];
             },
-            $repository->all()
+            $this->repository()->all()
         );
 
         $judul = 'Daftar Mahasiswa';
@@ -50,37 +50,36 @@ class MahasiswaController
         $aksiUtama = ['label' => 'Tambah Mahasiswa', 'href' => '/mahasiswa/tambah'];
         $flash = $_SESSION['flash'] ?? null;
         unset($_SESSION['flash']);
+
         require dirname(__DIR__, 2) . '/views/mahasiswa/index.php';
     }
 
     /**
      * Menampilkan form tambah mahasiswa.
-     *
-     * GET /mahasiswa/tambah
      */
     public function tambah(): void
     {
-        $judul    = 'Tambah Mahasiswa';
+        $judul = 'Tambah Mahasiswa';
         $deskripsiHalaman = 'Lengkapi identitas mahasiswa untuk menyimpan data baru.';
         $menuAktif = 'mahasiswa-form';
         $mahasiswaId = null;
         $oldInput = ['nim' => '', 'nama' => '', 'prodi' => ''];
-        $errors   = [];
+        $errors = [];
 
         require dirname(__DIR__, 2) . '/views/mahasiswa/tambah.php';
     }
 
     /**
      * Menampilkan form edit mahasiswa.
-     *
-     * GET /mahasiswa/edit?id=<id>
      */
     public function edit(): void
     {
-        $id = $this->idRequest();
-        $mahasiswa = (new PdoMahasiswaRepository())->findById($id);
+        $id = $this->idAngka($_GET['id'] ?? null);
+        $mahasiswa = $id === null ? null : $this->repository()->findById($id);
+
         if ($mahasiswa === null) {
-            $this->notFound();
+            $this->tampilkanTidakDitemukan();
+            return;
         }
 
         $judul = 'Edit Mahasiswa';
@@ -99,24 +98,15 @@ class MahasiswaController
 
     /**
      * Memvalidasi dan menyimpan mahasiswa baru.
-     *
-     * POST /mahasiswa/simpan
      */
     public function simpan(): void
     {
         $oldInput = [
-            'nim'   => $this->nilaiPost('nim'),
-            'nama'  => $this->nilaiPost('nama'),
+            'nim' => $this->nilaiPost('nim'),
+            'nama' => $this->nilaiPost('nama'),
             'prodi' => $this->nilaiPost('prodi'),
         ];
         $errors = $this->validasi($oldInput);
-
-        if ($errors === []) {
-            $repository = new PdoMahasiswaRepository();
-            if ($repository->existsByNim($oldInput['nim'])) {
-                $errors['nim'] = 'NIM sudah digunakan.';
-            }
-        }
 
         if ($errors !== []) {
             http_response_code(422);
@@ -128,7 +118,7 @@ class MahasiswaController
             return;
         }
 
-        $repository->save(new Mahasiswa(
+        $this->repository()->save(new Mahasiswa(
             id: null,
             nim: $oldInput['nim'],
             nama: $oldInput['nama'],
@@ -141,16 +131,16 @@ class MahasiswaController
     }
 
     /**
-     * Memvalidasi dan memperbarui mahasiswa.
-     *
-     * POST /mahasiswa/update
+     * Memvalidasi dan memperbarui data mahasiswa.
      */
     public function update(): void
     {
-        $id = $this->idPost();
-        $repository = new PdoMahasiswaRepository();
-        if ($repository->findById($id) === null) {
-            $this->notFound();
+        $id = $this->idAngka($this->nilaiPost('id'));
+        $mahasiswa = $id === null ? null : $this->repository()->findById($id);
+
+        if ($mahasiswa === null) {
+            $this->tampilkanTidakDitemukan();
+            return;
         }
 
         $oldInput = [
@@ -158,10 +148,7 @@ class MahasiswaController
             'nama' => $this->nilaiPost('nama'),
             'prodi' => $this->nilaiPost('prodi'),
         ];
-        $errors = $this->validasi($oldInput);
-        if ($errors === [] && $repository->existsByNim($oldInput['nim'], $id)) {
-            $errors['nim'] = 'NIM sudah digunakan.';
-        }
+        $errors = $this->validasi($oldInput, $id);
 
         if ($errors !== []) {
             http_response_code(422);
@@ -173,7 +160,7 @@ class MahasiswaController
             return;
         }
 
-        $repository->update(new Mahasiswa(
+        $this->repository()->update(new Mahasiswa(
             id: $id,
             nim: $oldInput['nim'],
             nama: $oldInput['nama'],
@@ -186,23 +173,35 @@ class MahasiswaController
     }
 
     /**
-     * Menghapus mahasiswa tanpa data nilai terkait.
-     *
-     * POST /mahasiswa/hapus
+     * Menghapus mahasiswa tanpa menghapus nilai yang terkait.
      */
     public function hapus(): void
     {
-        $id = $this->idPost();
-        $repository = new PdoMahasiswaRepository();
+        $id = $this->idAngka($this->nilaiPost('id'));
+        if ($id === null) {
+            $this->setFlash('error', 'ID mahasiswa tidak valid.');
+            header('Location: /mahasiswa');
+            exit;
+        }
+
+        $repository = $this->repository();
         if ($repository->findById($id) === null) {
             $this->setFlash('error', 'Data mahasiswa tidak ditemukan.');
-        } else {
-            try {
-                $repository->delete($id);
-                $this->setFlash('success', 'Data mahasiswa berhasil dihapus.');
-            } catch (\DomainException) {
-                $this->setFlash('error', 'Mahasiswa masih memiliki data nilai. Hapus nilainya terlebih dahulu.');
+            header('Location: /mahasiswa');
+            exit;
+        }
+
+        try {
+            $repository->delete($id);
+            $this->setFlash('success', 'Data mahasiswa berhasil dihapus.');
+        } catch (\DomainException) {
+            $this->setFlash('error', 'Mahasiswa masih memiliki data nilai. Hapus nilainya terlebih dahulu.');
+        } catch (PDOException $e) {
+            if ((string) $e->getCode() !== '23000') {
+                throw $e;
             }
+
+            $this->setFlash('error', 'Mahasiswa masih memiliki data nilai. Hapus nilainya terlebih dahulu.');
         }
 
         header('Location: /mahasiswa');
@@ -210,12 +209,15 @@ class MahasiswaController
     }
 
     /**
+     * Validasi data mahasiswa untuk proses simpan dan pembaruan.
+     *
      * @param array{nim:string,nama:string,prodi:string} $input
-     * @return array<string,string>
+     * @return array<string, string>
      */
-    private function validasi(array $input): array
+    private function validasi(array $input, ?int $exceptId = null): array
     {
         $errors = [];
+
         if ($input['nim'] === '') {
             $errors['nim'] = 'NIM wajib diisi.';
         } elseif (!ctype_digit($input['nim'])) {
@@ -230,35 +232,39 @@ class MahasiswaController
                 continue;
             }
 
-            $length = preg_match_all('/./us', $input[$field]);
-            if ($length === false) {
+            $panjang = preg_match_all('/./us', $input[$field]);
+            if ($panjang === false) {
                 $errors[$field] = $label . ' harus berupa teks UTF-8 yang valid.';
-            } elseif ($length > 100) {
+            } elseif ($panjang > 100) {
                 $errors[$field] = $label . ' maksimal 100 karakter.';
             }
+        }
+
+        if ($errors === [] && $this->repository()->existsByNim($input['nim'], $exceptId)) {
+            $errors['nim'] = 'NIM sudah digunakan.';
         }
 
         return $errors;
     }
 
-    private function idRequest(): int
+    private function repository(): PdoMahasiswaRepository
     {
-        $id = $_GET['id'] ?? '';
-        if (!is_string($id) || !ctype_digit($id) || (int) $id < 1) {
-            $this->notFound();
+        if ($this->repository === null) {
+            $this->repository = new PdoMahasiswaRepository();
         }
 
-        return (int) $id;
+        return $this->repository;
     }
 
-    private function idPost(): int
+    private function idAngka(mixed $nilai): ?int
     {
-        $id = $this->nilaiPost('id');
-        if ($id === '' || !ctype_digit($id) || (int) $id < 1) {
-            $this->notFound();
+        if (!is_string($nilai) || !ctype_digit($nilai)) {
+            return null;
         }
 
-        return (int) $id;
+        $id = filter_var($nilai, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+
+        return is_int($id) ? $id : null;
     }
 
     private function setFlash(string $type, string $message): void
@@ -266,11 +272,12 @@ class MahasiswaController
         $_SESSION['flash'] = ['type' => $type, 'message' => $message];
     }
 
-    private function notFound(): never
+    private function tampilkanTidakDitemukan(): void
     {
         http_response_code(404);
-        echo '<h1>404 – Mahasiswa tidak ditemukan</h1>';
-        exit;
+        $judul = 'Data tidak ditemukan';
+        $menuAktif = 'mahasiswa';
+        require dirname(__DIR__, 2) . '/views/mahasiswa/tidak-ditemukan.php';
     }
 
     /**

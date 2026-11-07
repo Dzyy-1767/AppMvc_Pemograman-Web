@@ -113,6 +113,9 @@ class PdoMahasiswaRepository implements MahasiswaRepository
         return $stmt->fetchColumn() !== false;
     }
 
+    /**
+     * Perbarui data mahasiswa menggunakan prepared statement.
+     */
     public function update(Mahasiswa $m): void
     {
         $id = $m->getId();
@@ -131,6 +134,9 @@ class PdoMahasiswaRepository implements MahasiswaRepository
         ]);
     }
 
+    /**
+     * Hapus mahasiswa hanya jika tidak memiliki data nilai.
+     */
     public function delete(int $id): void
     {
         $this->pdo->beginTransaction();
