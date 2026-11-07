@@ -37,10 +37,10 @@
                 <?php $no = 1; ?>
                 <?php foreach ($daftarMahasiswa as $mhs): ?>
                 <tr>
-                    <td class="center"><?= $no++ ?></td>
-                    <td><?= htmlspecialchars($mhs['nim'],   ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><?= htmlspecialchars($mhs['nama'],  ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><?= htmlspecialchars($mhs['prodi'], ENT_QUOTES, 'UTF-8') ?></td>
+                    <td class="center" data-label="No"><?= $no++ ?></td>
+                    <td data-label="NIM"><?= htmlspecialchars($mhs['nim'],   ENT_QUOTES, 'UTF-8') ?></td>
+                    <td data-label="Nama"><?= htmlspecialchars($mhs['nama'],  ENT_QUOTES, 'UTF-8') ?></td>
+                    <td data-label="Program Studi"><?= htmlspecialchars($mhs['prodi'], ENT_QUOTES, 'UTF-8') ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -78,6 +78,39 @@
     }
 
     .tabel-mahasiswa td.center { text-align: center; }
+
+    @media (max-width: 600px) {
+        .tabel-mahasiswa,
+        .tabel-mahasiswa tbody { display: block; width: 100%; }
+        .tabel-mahasiswa thead { display: none; }
+        .tabel-mahasiswa tbody tr {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: .5rem;
+            margin-bottom: .75rem;
+            padding: .65rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+        }
+        .tabel-mahasiswa tbody tr:nth-child(even) { background-color: #f7f9fc; }
+        .tabel-mahasiswa tbody tr:hover { background-color: #f7f9fc; }
+        .tabel-mahasiswa th,
+        .tabel-mahasiswa td {
+            min-width: 0;
+            padding: .35rem;
+            border: 0;
+            text-align: left;
+            overflow-wrap: anywhere;
+        }
+        .tabel-mahasiswa td::before {
+            display: block;
+            margin-bottom: .15rem;
+            color: #555;
+            content: attr(data-label);
+            font-size: .75rem;
+            font-weight: 600;
+        }
+    }
 
 </style>
 

@@ -94,10 +94,6 @@
         text-align: center;
     }
     @media (max-width: 480px) {
-        nav { gap: 1rem; padding: 0 .75rem; }
-        nav .brand { font-size: 1rem; }
-        nav a { font-size: .82rem; }
-        .card { padding: 1.25rem 1rem; }
         .tabel-grade th, .tabel-grade td { padding: .5rem .4rem; }
     }
 </style>

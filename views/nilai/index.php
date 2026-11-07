@@ -33,13 +33,13 @@
             <tbody>
                 <?php foreach ($daftarNilai as $index => $nilai): ?>
                 <tr>
-                    <td><?= $index + 1 ?></td>
-                    <td><?= htmlspecialchars($nilai['nim'], ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><?= htmlspecialchars($nilai['nama'], ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><?= htmlspecialchars($nilai['mata_kuliah'], ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><?= htmlspecialchars(number_format($nilai['nilai_akhir'], 2, '.', ''), ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><?= htmlspecialchars($nilai['grade'], ENT_QUOTES, 'UTF-8') ?></td>
-                    <td class="aksi">
+                    <td data-label="No"><?= $index + 1 ?></td>
+                    <td data-label="NIM"><?= htmlspecialchars($nilai['nim'], ENT_QUOTES, 'UTF-8') ?></td>
+                    <td data-label="Nama"><?= htmlspecialchars($nilai['nama'], ENT_QUOTES, 'UTF-8') ?></td>
+                    <td data-label="Mata Kuliah"><?= htmlspecialchars($nilai['mata_kuliah'], ENT_QUOTES, 'UTF-8') ?></td>
+                    <td data-label="Nilai"><?= htmlspecialchars(number_format($nilai['nilai_akhir'], 2, '.', ''), ENT_QUOTES, 'UTF-8') ?></td>
+                    <td data-label="Grade"><?= htmlspecialchars($nilai['grade'], ENT_QUOTES, 'UTF-8') ?></td>
+                    <td class="aksi" data-label="Aksi">
                         <a href="/nilai/edit?id=<?= (int) $nilai['id'] ?>">Edit</a>
                         <form method="POST" action="/nilai/hapus" onsubmit="return confirm('Hapus nilai ini?');">
                             <input type="hidden" name="id" value="<?= (int) $nilai['id'] ?>">
@@ -66,6 +66,43 @@
         border-radius: 5px;
         background-color: #eaf0fb;
         color: #1a56db;
+    }
+    @media (max-width: 600px) {
+        .tabel-nilai,
+        .tabel-nilai tbody { display: block; width: 100%; }
+        .tabel-nilai thead { display: none; }
+        .tabel-nilai tbody tr {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: .5rem;
+            margin-bottom: .75rem;
+            padding: .65rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+        }
+        .tabel-nilai tbody tr:nth-child(even) { background-color: #f7f9fc; }
+        .tabel-nilai th,
+        .tabel-nilai td {
+            min-width: 0;
+            padding: .35rem;
+            border: 0;
+            overflow-wrap: anywhere;
+        }
+        .tabel-nilai td::before {
+            display: block;
+            margin-bottom: .15rem;
+            color: #555;
+            content: attr(data-label);
+            font-size: .75rem;
+            font-weight: 600;
+        }
+        .tabel-nilai .aksi {
+            display: flex;
+            grid-column: 1 / -1;
+            align-items: center;
+            gap: .5rem;
+            white-space: normal;
+        }
     }
 </style>
 
