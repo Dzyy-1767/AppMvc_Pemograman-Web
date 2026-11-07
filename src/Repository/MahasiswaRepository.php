@@ -22,6 +22,10 @@ interface MahasiswaRepository
      */
     public function all(): array;
 
+    public function jumlah(): int;
+
+    public function findById(int $id): ?Mahasiswa;
+
     /**
      * Simpan mahasiswa baru.
      */
@@ -30,5 +34,14 @@ interface MahasiswaRepository
     /**
      * Periksa apakah NIM sudah digunakan.
      */
-    public function existsByNim(string $nim): bool;
+    public function existsByNim(string $nim, ?int $exceptId = null): bool;
+
+    public function update(Mahasiswa $m): void;
+
+    /**
+     * Hapus mahasiswa jika tidak memiliki nilai terkait.
+     *
+     * @throws \DomainException Jika mahasiswa masih memiliki nilai.
+     */
+    public function delete(int $id): void;
 }

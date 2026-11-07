@@ -8,10 +8,23 @@
 
 declare(strict_types=1);
 
+if (php_sapi_name() === 'cli-server') {
+    $jalur = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    if (is_string($jalur) && preg_match('#^/(css|js|fonts)/#', $jalur) === 1) {
+        $file = __DIR__ . $jalur;
+        if (is_file($file)) {
+            return false;
+        }
+    }
+}
+
+session_start();
+
 // ── 1. Autoload PSR-4 (semua kelas namespace UMM\Pemweb\) ─────────────────
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 use UMM\Pemweb\Core\Router;
+use UMM\Pemweb\Controllers\BerandaController;
 use UMM\Pemweb\Controllers\MahasiswaController;
 use UMM\Pemweb\Controllers\NilaiController;
 
@@ -19,9 +32,13 @@ use UMM\Pemweb\Controllers\NilaiController;
 $router = new Router();
 
 // ── 3. Daftarkan rute ─────────────────────────────────────────────────────
+$router->get('/', [BerandaController::class, 'index']);
 $router->get('/mahasiswa', [MahasiswaController::class, 'index']);
 $router->get('/mahasiswa/tambah', [MahasiswaController::class, 'tambah']);
+$router->get('/mahasiswa/edit', [MahasiswaController::class, 'edit']);
 $router->post('/mahasiswa/simpan', [MahasiswaController::class, 'simpan']);
+$router->post('/mahasiswa/update', [MahasiswaController::class, 'update']);
+$router->post('/mahasiswa/hapus', [MahasiswaController::class, 'hapus']);
 $router->get('/nilai', [NilaiController::class, 'index']);
 $router->get('/nilai/tambah', [NilaiController::class, 'tambah']);
 $router->get('/nilai/edit', [NilaiController::class, 'edit']);

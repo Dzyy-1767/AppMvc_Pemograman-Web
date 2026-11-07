@@ -16,6 +16,8 @@ interface NilaiRepository
      */
     public function all(): array;
 
+    public function jumlah(): int;
+
     public function findById(int $id): ?Nilai;
 
     public function save(Nilai $nilai): void;
