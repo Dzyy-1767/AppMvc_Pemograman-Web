@@ -8,6 +8,8 @@
 
 declare(strict_types=1);
 
+session_start();
+
 // ── 1. Autoload PSR-4 (semua kelas namespace UMM\Pemweb\) ─────────────────
 require dirname(__DIR__) . '/vendor/autoload.php';
 

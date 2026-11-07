@@ -32,13 +32,15 @@ class NilaiController
 
         $judul = 'Daftar Nilai';
         $menuAktif = 'nilai';
+        $flash = $_SESSION['flash'] ?? null;
+        unset($_SESSION['flash']);
         require dirname(__DIR__, 2) . '/views/nilai/index.php';
     }
 
     public function tambah(): void
     {
         $judul = 'Tambah Nilai';
-        $menuAktif = 'nilai';
+        $menuAktif = 'nilai-form';
         $mahasiswa = (new PdoMahasiswaRepository())->all();
         $oldInput = ['mahasiswa_id' => '', 'mata_kuliah' => '', 'nilai_akhir' => ''];
         $errors = [];
@@ -56,7 +58,8 @@ class NilaiController
         }
 
         $judul = 'Edit Nilai';
-        $menuAktif = 'nilai';
+        $menuAktif = 'nilai-form';
+        $nilaiId = $id;
         $mahasiswa = (new PdoMahasiswaRepository())->all();
         $oldInput = [
             'mahasiswa_id' => (string) $nilai->getMahasiswaId(),
@@ -81,7 +84,7 @@ class NilaiController
         if ($errors !== []) {
             http_response_code(422);
             $judul = 'Tambah Nilai';
-            $menuAktif = 'nilai';
+            $menuAktif = 'nilai-form';
             require dirname(__DIR__, 2) . '/views/nilai/tambah.php';
             return;
         }
@@ -93,6 +96,9 @@ class NilaiController
             nilaiAkhir: $nilaiAkhir,
         ));
 
+        $_SESSION['flash'] = [
+            'message' => 'Nilai berhasil ditambahkan.',
+        ];
         header('Location: /nilai');
         exit;
     }
@@ -117,7 +123,7 @@ class NilaiController
         if ($errors !== []) {
             http_response_code(422);
             $judul = 'Edit Nilai';
-            $menuAktif = 'nilai';
+            $menuAktif = 'nilai-form';
             $nilaiId = $id;
             require dirname(__DIR__, 2) . '/views/nilai/tambah.php';
             return;
@@ -130,6 +136,9 @@ class NilaiController
             nilaiAkhir: $nilaiAkhir,
         ));
 
+        $_SESSION['flash'] = [
+            'message' => 'Nilai berhasil diperbarui.',
+        ];
         header('Location: /nilai');
         exit;
     }
@@ -143,6 +152,9 @@ class NilaiController
         }
 
         $repository->delete($id);
+        $_SESSION['flash'] = [
+            'message' => 'Nilai berhasil dihapus.',
+        ];
         header('Location: /nilai');
         exit;
     }
