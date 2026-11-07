@@ -19,19 +19,26 @@ class NilaiController
         $repository = new PdoNilaiRepository();
         $calculator = new GradeCalculator();
         $daftarNilai = array_map(
-            static fn(Nilai $nilai): array => [
-                'id' => $nilai->getId(),
-                'nim' => $nilai->getNim(),
-                'nama' => $nilai->getNamaMahasiswa(),
-                'mata_kuliah' => $nilai->getMataKuliah(),
-                'nilai_akhir' => $nilai->getNilaiAkhir(),
-                'grade' => $calculator->calculate($nilai->getNilaiAkhir()),
-            ],
+            static function (Nilai $nilai) use ($calculator): array {
+                $grade = $calculator->calculate($nilai->getNilaiAkhir());
+
+                return [
+                    'id' => $nilai->getId(),
+                    'nim' => $nilai->getNim(),
+                    'nama' => $nilai->getNamaMahasiswa(),
+                    'mata_kuliah' => $nilai->getMataKuliah(),
+                    'nilai_akhir' => $nilai->getNilaiAkhir(),
+                    'grade' => $grade,
+                    'kelas' => 'grade-' . strtolower($grade),
+                ];
+            },
             $repository->all()
         );
 
         $judul = 'Daftar Nilai';
+        $deskripsiHalaman = 'Tinjau nilai akhir dan grade setiap mahasiswa.';
         $menuAktif = 'nilai';
+        $aksiUtama = ['label' => 'Tambah Nilai', 'href' => '/nilai/tambah'];
         $flash = $_SESSION['flash'] ?? null;
         unset($_SESSION['flash']);
         require dirname(__DIR__, 2) . '/views/nilai/index.php';
@@ -40,6 +47,7 @@ class NilaiController
     public function tambah(): void
     {
         $judul = 'Tambah Nilai';
+        $deskripsiHalaman = 'Catat nilai akhir mata kuliah untuk mahasiswa.';
         $menuAktif = 'nilai-form';
         $mahasiswa = (new PdoMahasiswaRepository())->all();
         $oldInput = ['mahasiswa_id' => '', 'mata_kuliah' => '', 'nilai_akhir' => ''];
@@ -58,6 +66,7 @@ class NilaiController
         }
 
         $judul = 'Edit Nilai';
+        $deskripsiHalaman = 'Perbarui nilai akhir mata kuliah yang dipilih.';
         $menuAktif = 'nilai-form';
         $nilaiId = $id;
         $mahasiswa = (new PdoMahasiswaRepository())->all();
@@ -84,6 +93,7 @@ class NilaiController
         if ($errors !== []) {
             http_response_code(422);
             $judul = 'Tambah Nilai';
+            $deskripsiHalaman = 'Catat nilai akhir mata kuliah untuk mahasiswa.';
             $menuAktif = 'nilai-form';
             require dirname(__DIR__, 2) . '/views/nilai/tambah.php';
             return;
@@ -123,6 +133,7 @@ class NilaiController
         if ($errors !== []) {
             http_response_code(422);
             $judul = 'Edit Nilai';
+            $deskripsiHalaman = 'Perbarui nilai akhir mata kuliah yang dipilih.';
             $menuAktif = 'nilai-form';
             $nilaiId = $id;
             require dirname(__DIR__, 2) . '/views/nilai/tambah.php';
