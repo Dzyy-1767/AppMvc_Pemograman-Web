@@ -43,6 +43,10 @@
         }
 
         nav a:hover { color: #fff; }
+        nav a.active {
+            color: #fff;
+            font-weight: 700;
+        }
 
         /* ── Container ────────────────────────────────────────────────── */
         .container {
@@ -73,8 +77,9 @@
 
 <nav>
     <a class="brand" href="/">SINILAI</a>
-    <a href="/mahasiswa">Mahasiswa</a>
-    <a href="/nilai">Nilai</a>
+    <a class="<?= ($menuAktif ?? '') === 'beranda' ? 'active' : '' ?>" href="/" <?= ($menuAktif ?? '') === 'beranda' ? 'aria-current="page"' : '' ?>>Beranda</a>
+    <a class="<?= ($menuAktif ?? '') === 'mahasiswa' ? 'active' : '' ?>" href="/mahasiswa" <?= ($menuAktif ?? '') === 'mahasiswa' ? 'aria-current="page"' : '' ?>>Mahasiswa</a>
+    <a class="<?= ($menuAktif ?? '') === 'nilai' ? 'active' : '' ?>" href="/nilai" <?= ($menuAktif ?? '') === 'nilai' ? 'aria-current="page"' : '' ?>>Nilai</a>
 </nav>
 
 <div class="container">
