@@ -8,6 +8,16 @@
 
 declare(strict_types=1);
 
+if (php_sapi_name() === 'cli-server') {
+    $jalur = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    if (is_string($jalur) && preg_match('#^/(css|js|fonts)/#', $jalur) === 1) {
+        $file = __DIR__ . $jalur;
+        if (is_file($file)) {
+            return false;
+        }
+    }
+}
+
 session_start();
 
 // ── 1. Autoload PSR-4 (semua kelas namespace UMM\Pemweb\) ─────────────────
