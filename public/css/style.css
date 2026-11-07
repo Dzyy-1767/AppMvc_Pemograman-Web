@@ -83,6 +83,21 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .nav-list {
     display: grid;
     gap: .35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.nav-overlay {
+    display: none;
+}
+
+.menu-terbuka {
+    overflow: hidden;
+}
+
+.menu-toggle {
+    display: none;
 }
 
 .nav-link {
@@ -575,48 +590,150 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     to { opacity: 0; transform: translateY(-8px); }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 599.98px) {
     .app-shell {
         grid-template-columns: minmax(0, 1fr);
     }
 
     .sidebar {
         position: sticky;
-        z-index: 5;
+        z-index: 10;
         top: 0;
+        display: flex;
         height: auto;
-        gap: .5rem;
-        padding: .65rem .75rem .4rem;
+        min-height: 64px;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: .5rem 1rem;
     }
 
     .brand {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
         padding: 0 .35rem;
         font-size: 1.45rem;
     }
 
+    .menu-toggle {
+        width: 44px;
+        height: 44px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--garis);
+        border-radius: 6px;
+        background: transparent;
+        color: var(--kartu);
+        cursor: pointer;
+    }
+
+    .menu-toggle-icon,
+    .menu-toggle-icon::before,
+    .menu-toggle-icon::after {
+        display: block;
+        width: 20px;
+        height: 2px;
+        border-radius: 2px;
+        background: currentColor;
+    }
+
+    .menu-toggle-icon {
+        position: relative;
+    }
+
+    .menu-toggle-icon::before,
+    .menu-toggle-icon::after {
+        position: absolute;
+        left: 0;
+        content: "";
+    }
+
+    .menu-toggle-icon::before {
+        top: -6px;
+    }
+
+    .menu-toggle-icon::after {
+        top: 6px;
+    }
+
+    .nav-panel {
+        width: 100%;
+    }
+
     .nav-list {
-        display: flex;
-        min-width: 0;
+        display: grid;
         gap: .25rem;
-        overflow-x: auto;
-        padding-bottom: .25rem;
-        scrollbar-width: thin;
+        padding-top: .5rem;
     }
 
     .nav-link {
-        flex: 0 0 auto;
-        border-bottom: 2px solid transparent;
-        border-left: 0;
-        border-radius: 4px;
-        padding: .45rem .7rem;
-        white-space: nowrap;
+        min-height: 44px;
+        align-content: center;
+    }
+
+    .js .sidebar {
+        height: 64px;
+        flex-wrap: nowrap;
+    }
+
+    .js .menu-toggle {
+        display: inline-flex;
+    }
+
+    .js .nav-panel {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        display: none;
+        padding: 0 1rem .75rem;
+        background: var(--tinta);
+    }
+
+    .js .nav-list {
+        padding-top: .25rem;
+    }
+
+    .js .menu-terbuka .nav-panel {
+        display: block;
+    }
+
+    .js .nav-overlay {
+        position: fixed;
+        z-index: 8;
+        inset: 64px 0 0;
+        display: none;
+        background: color-mix(in srgb, var(--tinta) 45%, transparent);
+    }
+
+    .js .menu-terbuka .nav-overlay {
+        display: block;
     }
 
     .nav-link.active {
-        border-bottom-color: var(--aksen);
-        border-left: 0;
+        border-left-color: var(--aksen);
+    }
+}
+
+@media (min-width: 600px) and (max-width: 899.98px) {
+    .app-shell {
+        grid-template-columns: 200px minmax(0, 1fr);
     }
 
+    .sidebar {
+        gap: 1.5rem;
+        padding: 1.5rem .75rem;
+    }
+
+    .brand {
+        font-size: 1.55rem;
+    }
+}
+
+@media (max-width: 899.98px) {
     .page-header {
         align-items: flex-start;
         flex-direction: column;
@@ -634,6 +751,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
     .site-footer {
         padding: 1.25rem 1rem;
+    }
+}
+
+@media (min-width: 600px) {
+    .menu-toggle,
+    .nav-overlay {
+        display: none;
     }
 }
 
