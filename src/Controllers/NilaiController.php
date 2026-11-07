@@ -31,12 +31,14 @@ class NilaiController
         );
 
         $judul = 'Daftar Nilai';
+        $menuAktif = 'nilai';
         require dirname(__DIR__, 2) . '/views/nilai/index.php';
     }
 
     public function tambah(): void
     {
         $judul = 'Tambah Nilai';
+        $menuAktif = 'nilai';
         $mahasiswa = (new PdoMahasiswaRepository())->all();
         $oldInput = ['mahasiswa_id' => '', 'mata_kuliah' => '', 'nilai_akhir' => ''];
         $errors = [];
@@ -54,6 +56,7 @@ class NilaiController
         }
 
         $judul = 'Edit Nilai';
+        $menuAktif = 'nilai';
         $mahasiswa = (new PdoMahasiswaRepository())->all();
         $oldInput = [
             'mahasiswa_id' => (string) $nilai->getMahasiswaId(),
@@ -78,6 +81,7 @@ class NilaiController
         if ($errors !== []) {
             http_response_code(422);
             $judul = 'Tambah Nilai';
+            $menuAktif = 'nilai';
             require dirname(__DIR__, 2) . '/views/nilai/tambah.php';
             return;
         }
@@ -113,6 +117,7 @@ class NilaiController
         if ($errors !== []) {
             http_response_code(422);
             $judul = 'Edit Nilai';
+            $menuAktif = 'nilai';
             $nilaiId = $id;
             require dirname(__DIR__, 2) . '/views/nilai/tambah.php';
             return;
