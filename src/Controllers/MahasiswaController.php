@@ -52,7 +52,7 @@ class MahasiswaController
     public function tambah(): void
     {
         $judul    = 'Tambah Mahasiswa';
-        $menuAktif = 'mahasiswa';
+        $menuAktif = 'mahasiswa-form';
         $oldInput = ['nim' => '', 'nama' => '', 'prodi' => ''];
         $errors   = [];
 
@@ -97,7 +97,7 @@ class MahasiswaController
         if ($errors !== []) {
             http_response_code(422);
             $judul = 'Tambah Mahasiswa';
-            $menuAktif = 'mahasiswa';
+            $menuAktif = 'mahasiswa-form';
             require dirname(__DIR__, 2) . '/views/mahasiswa/tambah.php';
             return;
         }

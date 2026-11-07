@@ -64,51 +64,9 @@
         </form>
 
 <style>
-    .field { margin-bottom: 1rem; }
-
-    .field label {
-        display: block;
-        margin-bottom: .35rem;
-        font-weight: 600;
-    }
-
-    .field input {
-        width: 100%;
-        padding: .65rem .75rem;
-        border: 1px solid #cbd5e1;
-        border-radius: 5px;
-        font: inherit;
-    }
-
     .field input:focus {
         border-color: #1a56db;
         outline: 2px solid #c7d9ff;
-    }
-
-    .error {
-        margin-top: .25rem;
-        color: #b42318;
-        font-size: .9rem;
-    }
-
-    .aksi-form {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        gap: 1rem;
-        margin-top: 1.5rem;
-    }
-
-    .aksi-form a { color: #1a56db; }
-
-    .aksi-form button {
-        padding: .6rem 1rem;
-        border: 0;
-        border-radius: 5px;
-        background-color: #1a56db;
-        color: #fff;
-        font: inherit;
-        cursor: pointer;
     }
 </style>
 
