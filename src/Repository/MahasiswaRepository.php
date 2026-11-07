@@ -23,6 +23,11 @@ interface MahasiswaRepository
     public function all(): array;
 
     /**
+     * Cari mahasiswa berdasarkan ID.
+     */
+    public function find(int $id): ?Mahasiswa;
+
+    /**
      * Simpan mahasiswa baru.
      */
     public function save(Mahasiswa $m): void;
@@ -30,5 +35,15 @@ interface MahasiswaRepository
     /**
      * Periksa apakah NIM sudah digunakan.
      */
-    public function existsByNim(string $nim): bool;
+    public function existsByNim(string $nim, ?int $kecualiId = null): bool;
+
+    /**
+     * Perbarui data mahasiswa yang sudah ada.
+     */
+    public function update(Mahasiswa $m): void;
+
+    /**
+     * Hapus mahasiswa yang tidak memiliki data nilai.
+     */
+    public function delete(int $id): void;
 }

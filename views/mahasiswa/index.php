@@ -20,6 +20,12 @@
             <a class="tombol-tambah" href="/mahasiswa/tambah">Tambah Mahasiswa</a>
         </p>
 
+        <?php if ($flash !== null): ?>
+            <p class="flash <?= htmlspecialchars($flash['type'], ENT_QUOTES, 'UTF-8') ?>">
+                <?= htmlspecialchars($flash['message'], ENT_QUOTES, 'UTF-8') ?>
+            </p>
+        <?php endif; ?>
+
         <?php if (empty($daftarMahasiswa)): ?>
             <p class="empty-msg">Belum ada data mahasiswa.</p>
         <?php else: ?>
@@ -31,6 +37,7 @@
                     <th>NIM</th>
                     <th>Nama</th>
                     <th>Program Studi</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,6 +48,13 @@
                     <td><?= htmlspecialchars($mhs['nim'],   ENT_QUOTES, 'UTF-8') ?></td>
                     <td><?= htmlspecialchars($mhs['nama'],  ENT_QUOTES, 'UTF-8') ?></td>
                     <td><?= htmlspecialchars($mhs['prodi'], ENT_QUOTES, 'UTF-8') ?></td>
+                    <td class="aksi-baris">
+                        <a href="/mahasiswa/edit?id=<?= htmlspecialchars((string) $mhs['id'], ENT_QUOTES, 'UTF-8') ?>">Edit</a>
+                        <form method="POST" action="/mahasiswa/hapus" onsubmit="return confirm('Yakin hapus data ini?')">
+                            <input type="hidden" name="id" value="<?= htmlspecialchars((string) $mhs['id'], ENT_QUOTES, 'UTF-8') ?>">
+                            <button type="submit">Hapus</button>
+                        </form>
+                    </td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -53,6 +67,22 @@
         <?php endif; ?>
 
 <style>
+    .flash {
+        margin-bottom: 1rem;
+        padding: .75rem 1rem;
+        border-radius: 5px;
+    }
+
+    .flash.success {
+        background-color: #e8f7ed;
+        color: #176b35;
+    }
+
+    .flash.error {
+        background-color: #fdecec;
+        color: #a32121;
+    }
+
     .aksi-tambah {
         margin-bottom: 1rem;
         text-align: right;
@@ -99,6 +129,26 @@
     }
 
     .tabel-mahasiswa td.center { text-align: center; }
+
+    .aksi-baris {
+        white-space: nowrap;
+    }
+
+    .aksi-baris a {
+        margin-right: .5rem;
+        color: #1a56db;
+    }
+
+    .aksi-baris form { display: inline; }
+
+    .aksi-baris button {
+        padding: .3rem .55rem;
+        border: 0;
+        border-radius: 4px;
+        background-color: #b42318;
+        color: #fff;
+        cursor: pointer;
+    }
 
     /* ── Pesan tambahan ───────────────────────────────────────────────── */
     .jumlah-data {
