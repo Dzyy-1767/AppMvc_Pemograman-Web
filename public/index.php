@@ -12,6 +12,7 @@ declare(strict_types=1);
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 use UMM\Pemweb\Core\Router;
+use UMM\Pemweb\Controllers\BerandaController;
 use UMM\Pemweb\Controllers\MahasiswaController;
 use UMM\Pemweb\Controllers\NilaiController;
 
@@ -19,6 +20,7 @@ use UMM\Pemweb\Controllers\NilaiController;
 $router = new Router();
 
 // ── 3. Daftarkan rute ─────────────────────────────────────────────────────
+$router->get('/', [BerandaController::class, 'index']);
 $router->get('/mahasiswa', [MahasiswaController::class, 'index']);
 $router->get('/mahasiswa/tambah', [MahasiswaController::class, 'tambah']);
 $router->post('/mahasiswa/simpan', [MahasiswaController::class, 'simpan']);
