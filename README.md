@@ -2,6 +2,15 @@
 
 Kerangka aplikasi PHP MVC **tanpa framework** untuk mata kuliah Pemrograman Web.
 
+## Fitur Utama
+
+- Dashboard beranda dengan ringkasan data mahasiswa dan nilai.
+- Pengelolaan data mahasiswa: daftar, tambah, edit, dan hapus dengan validasi.
+- Pengelolaan nilai: daftar, tambah, edit, dan hapus; grade dihitung otomatis.
+- Kartu mahasiswa dan nilai dapat dibalik untuk menampilkan aksi Edit dan Hapus.
+- Navigasi responsif untuk desktop dan perangkat mobile.
+- Form hapus menggunakan metode `POST`; tampilan daftar tetap dapat digunakan tanpa JavaScript.
+
 ---
 
 ## Prasyarat
@@ -52,7 +61,7 @@ mysql -u root -p < database/schema.sql
 php -S localhost:8000 -t public public/index.php
 ```
 
-Buka browser → <http://localhost:8000/mahasiswa>
+Buka browser → <http://localhost:8000/>
 
 > **Catatan:** `.htaccess` tidak dibaca oleh PHP built-in server.
 > Flag `-t public public/index.php` menggantikan fungsi `.htaccess`:
@@ -155,6 +164,7 @@ Browser (HTML halaman daftar mahasiswa)
 
 | Method | URI | Keterangan |
 |--------|-----|------------|
+| GET | `/` | Beranda dan ringkasan |
 | GET | `/mahasiswa` | Daftar semua mahasiswa |
 | GET | `/mahasiswa/tambah` | Form tambah mahasiswa |
 | POST | `/mahasiswa/simpan` | Validasi dan simpan mahasiswa baru |
@@ -174,12 +184,13 @@ Grade dihitung dari nilai akhir (0–100): A ≥ 85, B ≥ 75, C ≥ 65, D ≥ 5
 
 ## Pengujian
 
-### Uji GET /mahasiswa (harus tampil 3 data)
+### Uji halaman beranda dan daftar
 
 1. Jalankan server: `php -S localhost:8000 -t public public/index.php`
-2. Buka <http://localhost:8000/mahasiswa>
-3. ✅ Halaman menampilkan tabel dengan 3 baris: Andi Pratama, Siti Rahayu, Budi Santoso
-4. ✅ Footer menampilkan "Total: **3** mahasiswa terdaftar."
+2. Buka <http://localhost:8000/> dan pastikan halaman ringkasan tampil.
+3. Buka <http://localhost:8000/mahasiswa> dan <http://localhost:8000/nilai>; daftar data tampil sebagai kartu.
+4. Pada kartu, gunakan tombol atau klik/ketuk area informasi untuk membuka aksi Edit dan Hapus. Pastikan Hapus tetap meminta konfirmasi.
+5. Uji navigasi pada lebar mobile dan desktop; pada mobile menu dapat dibuka dan ditutup dengan tombol menu.
 
 ### Uji rute tidak ada (harus tampil 404)
 
