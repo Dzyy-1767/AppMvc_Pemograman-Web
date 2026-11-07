@@ -20,6 +20,12 @@
             <a class="tombol-tambah" href="/mahasiswa/tambah">Tambah Mahasiswa</a>
         </p>
 
+        <?php if (isset($flash['message'])): ?>
+            <p class="flash <?= htmlspecialchars($flash['type'] ?? 'success', ENT_QUOTES, 'UTF-8') ?>">
+                <?= htmlspecialchars($flash['message'], ENT_QUOTES, 'UTF-8') ?>
+            </p>
+        <?php endif; ?>
+
         <?php if (empty($daftarMahasiswa)): ?>
             <p class="empty-msg">Belum ada data mahasiswa.</p>
         <?php else: ?>
@@ -31,6 +37,7 @@
                     <th>NIM</th>
                     <th>Nama</th>
                     <th>Program Studi</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,6 +48,13 @@
                     <td data-label="NIM"><?= htmlspecialchars($mhs['nim'],   ENT_QUOTES, 'UTF-8') ?></td>
                     <td data-label="Nama"><?= htmlspecialchars($mhs['nama'],  ENT_QUOTES, 'UTF-8') ?></td>
                     <td data-label="Program Studi"><?= htmlspecialchars($mhs['prodi'], ENT_QUOTES, 'UTF-8') ?></td>
+                    <td class="aksi-baris" data-label="Aksi">
+                        <a href="/mahasiswa/edit?id=<?= (int) $mhs['id'] ?>">Edit</a>
+                        <form method="POST" action="/mahasiswa/hapus" onsubmit="return confirm('Yakin hapus data mahasiswa ini?')">
+                            <input type="hidden" name="id" value="<?= (int) $mhs['id'] ?>">
+                            <button type="submit">Hapus</button>
+                        </form>
+                    </td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -78,6 +92,23 @@
     }
 
     .tabel-mahasiswa td.center { text-align: center; }
+    .aksi-baris { white-space: nowrap; }
+    .aksi-baris form { display: inline; }
+    .aksi-baris button {
+        margin-left: .5rem;
+        border: 0;
+        background: none;
+        color: #b42318;
+        font: inherit;
+        cursor: pointer;
+    }
+    .flash {
+        margin-bottom: 1rem;
+        padding: .75rem 1rem;
+        border-radius: 5px;
+    }
+    .flash.success { background-color: #e8f7ed; color: #176b35; }
+    .flash.error { background-color: #fdecec; color: #a32121; }
 
     @media (max-width: 600px) {
         .tabel-mahasiswa,
@@ -109,6 +140,13 @@
             content: attr(data-label);
             font-size: .75rem;
             font-weight: 600;
+        }
+        .tabel-mahasiswa .aksi-baris {
+            display: flex;
+            grid-column: 1 / -1;
+            align-items: center;
+            gap: .5rem;
+            white-space: normal;
         }
     }
 

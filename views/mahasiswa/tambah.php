@@ -1,6 +1,6 @@
 <?php
 /**
- * View: Form tambah mahasiswa.
+ * View: Form tambah/edit mahasiswa.
  *
  * Menerima variabel dari MahasiswaController:
  *   $judul    – string judul halaman
@@ -12,7 +12,10 @@
 
         <h2 class="card-title"><?= htmlspecialchars($judul, ENT_QUOTES, 'UTF-8') ?></h2>
 
-        <form method="POST" action="/mahasiswa/simpan">
+        <form method="POST" action="<?= isset($mahasiswaId) ? '/mahasiswa/update' : '/mahasiswa/simpan' ?>">
+            <?php if (isset($mahasiswaId)): ?>
+                <input type="hidden" name="id" value="<?= (int) $mahasiswaId ?>">
+            <?php endif; ?>
             <div class="field">
                 <label for="nim">NIM</label>
                 <input
@@ -21,6 +24,7 @@
                     name="nim"
                     maxlength="20"
                     inputmode="numeric"
+                    required
                     value="<?= htmlspecialchars($oldInput['nim'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
                     aria-describedby="nim-error"
                 >
@@ -35,6 +39,8 @@
                     type="text"
                     id="nama"
                     name="nama"
+                    maxlength="100"
+                    required
                     value="<?= htmlspecialchars($oldInput['nama'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
                     aria-describedby="nama-error"
                 >
@@ -49,6 +55,8 @@
                     type="text"
                     id="prodi"
                     name="prodi"
+                    maxlength="100"
+                    required
                     value="<?= htmlspecialchars($oldInput['prodi'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
                     aria-describedby="prodi-error"
                 >
@@ -59,7 +67,7 @@
 
             <div class="aksi-form">
                 <a href="/mahasiswa">Kembali</a>
-                <button type="submit">Simpan Mahasiswa</button>
+                <button type="submit"><?= isset($mahasiswaId) ? 'Simpan Perubahan' : 'Simpan Mahasiswa' ?></button>
             </div>
         </form>
 
