@@ -37,6 +37,7 @@
                     type="text"
                     id="nama"
                     name="nama"
+                    maxlength="100"
                     value="<?= htmlspecialchars($oldInput['nama'], ENT_QUOTES, 'UTF-8') ?>"
                     aria-describedby="nama-error"
                 >
@@ -51,6 +52,7 @@
                     type="text"
                     id="prodi"
                     name="prodi"
+                    maxlength="100"
                     value="<?= htmlspecialchars($oldInput['prodi'], ENT_QUOTES, 'UTF-8') ?>"
                     aria-describedby="prodi-error"
                 >

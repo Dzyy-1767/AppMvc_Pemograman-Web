@@ -244,6 +244,14 @@ class MahasiswaController
         foreach (['nama' => 'Nama', 'prodi' => 'Program studi'] as $field => $label) {
             if ($input[$field] === '') {
                 $errors[$field] = $label . ' wajib diisi.';
+                continue;
+            }
+
+            $panjang = preg_match_all('/./us', $input[$field]);
+            if ($panjang === false) {
+                $errors[$field] = $label . ' harus berupa teks UTF-8 yang valid.';
+            } elseif ($panjang > 100) {
+                $errors[$field] = $label . ' maksimal 100 karakter.';
             }
         }
 
