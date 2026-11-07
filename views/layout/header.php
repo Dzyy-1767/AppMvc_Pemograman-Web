@@ -74,8 +74,8 @@
 <nav>
     <a class="brand" href="/">SINILAI</a>
     <a href="/mahasiswa">Mahasiswa</a>
+    <a href="/nilai">Nilai</a>
 </nav>
 
 <div class="container">
     <div class="card">
-

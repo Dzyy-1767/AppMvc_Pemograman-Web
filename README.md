@@ -96,12 +96,18 @@ app-mvc/
 │  ├─ Core/
 │  │  └─ Router.php
 │  ├─ Controllers/
-│  │  └─ MahasiswaController.php
+│  │  ├─ MahasiswaController.php
+│  │  └─ NilaiController.php
 │  ├─ Model/
-│  │  └─ Mahasiswa.php
+│  │  ├─ Mahasiswa.php
+│  │  └─ Nilai.php
 │  ├─ Repository/
-│  │  ├─ MahasiswaRepository.php        ← interface
-│  │  └─ PdoMahasiswaRepository.php     ← implementasi PDO
+│  │  ├─ MahasiswaRepository.php
+│  │  ├─ NilaiRepository.php
+│  │  ├─ PdoMahasiswaRepository.php
+│  │  └─ PdoNilaiRepository.php
+│  ├─ Service/
+│  │  └─ GradeCalculator.php
 │  └─ config/
 │     └─ koneksi.php
 └─ views/
@@ -147,6 +153,14 @@ Browser (HTML halaman daftar mahasiswa)
 | GET | `/mahasiswa` | Daftar semua mahasiswa |
 | GET | `/mahasiswa/tambah` | Form tambah mahasiswa |
 | POST | `/mahasiswa/simpan` | Validasi dan simpan mahasiswa baru |
+| GET | `/nilai` | Daftar nilai dan grade mahasiswa |
+| GET | `/nilai/tambah` | Form tambah nilai |
+| GET | `/nilai/edit?id={id}` | Form edit nilai |
+| POST | `/nilai/simpan` | Validasi dan simpan nilai |
+| POST | `/nilai/update` | Validasi dan perbarui nilai |
+| POST | `/nilai/hapus` | Hapus nilai |
+
+Grade dihitung dari nilai akhir (0–100): A ≥ 85, B ≥ 75, C ≥ 65, D ≥ 50, dan E untuk nilai di bawah 50.
 
 ---
 
