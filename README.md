@@ -19,21 +19,14 @@ Kerangka aplikasi PHP MVC **tanpa framework** untuk mata kuliah Pemrograman Web.
 |-----------|--------------|
 | PHP | 8.1 |
 | MySQL / MariaDB | 5.7 / 10.4 |
-| Composer | 2.x |
+
+Composer tidak wajib; proyek menyediakan autoloader PSR-4 lokal.
 
 ---
 
 ## Instalasi
 
-### 1. Install dependensi Composer
-
-```bash
-composer install
-```
-
-Perintah ini membuat folder `vendor/` dan mengaktifkan autoload PSR-4.
-
-### 2. Siapkan database
+### 1. Siapkan database
 
 Buka MySQL (phpMyAdmin, MySQL Workbench, atau CLI) lalu jalankan:
 
@@ -53,7 +46,7 @@ mysql -u root -p < database/schema.sql
 > - Username: `root`
 > - Password: *(kosong)*
 
-### 3. Jalankan server
+### 2. Jalankan server
 
 #### Opsi A – PHP built-in server (paling mudah)
 

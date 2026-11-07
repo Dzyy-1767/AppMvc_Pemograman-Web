@@ -21,7 +21,7 @@ if (php_sapi_name() === 'cli-server') {
 session_start();
 
 // ── 1. Autoload PSR-4 (semua kelas namespace UMM\Pemweb\) ─────────────────
-require dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__DIR__) . '/src/autoload.php';
 
 use UMM\Pemweb\Core\Router;
 use UMM\Pemweb\Controllers\BerandaController;
