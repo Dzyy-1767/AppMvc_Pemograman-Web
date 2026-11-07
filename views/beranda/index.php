@@ -5,25 +5,6 @@
             <p>Aplikasi untuk mengelola data mahasiswa dan nilai akhir mata kuliah. Grade dihitung otomatis berdasarkan nilai yang tersimpan.</p>
         </section>
 
-        <section class="navigasi" aria-label="Navigasi fitur utama">
-            <a class="kartu-navigasi" href="/mahasiswa">
-                <span class="ikon" aria-hidden="true">M</span>
-                <span>
-                    <strong>Data Mahasiswa</strong>
-                    <small>Lihat dan kelola data mahasiswa</small>
-                </span>
-                <span class="panah" aria-hidden="true">&rarr;</span>
-            </a>
-            <a class="kartu-navigasi" href="/nilai">
-                <span class="ikon" aria-hidden="true">N</span>
-                <span>
-                    <strong>Data Nilai</strong>
-                    <small>Lihat nilai akhir dan grade</small>
-                </span>
-                <span class="panah" aria-hidden="true">&rarr;</span>
-            </a>
-        </section>
-
         <section class="ringkasan" aria-label="Ringkasan data tersimpan">
             <article class="kartu-ringkasan">
                 <span class="label-ringkasan">Total Mahasiswa</span>
@@ -76,41 +57,12 @@
         line-height: 1.25;
     }
     .hero p { max-width: 680px; color: #555; }
-    .navigasi, .ringkasan {
+    .ringkasan {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
         gap: 1rem;
         margin-bottom: 1.5rem;
     }
-    .kartu-navigasi {
-        display: flex;
-        min-width: 0;
-        align-items: center;
-        gap: .85rem;
-        padding: 1rem;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        color: #333;
-        text-decoration: none;
-        transition: border-color .15s, background-color .15s;
-    }
-    .kartu-navigasi:hover { border-color: #1a56db; background-color: #f7f9fc; }
-    .kartu-navigasi > span:nth-child(2) { min-width: 0; }
-    .kartu-navigasi strong, .kartu-navigasi small { display: block; }
-    .kartu-navigasi strong { color: #1a56db; font-size: 1rem; }
-    .kartu-navigasi small { color: #555; }
-    .ikon {
-        display: grid;
-        width: 42px;
-        height: 42px;
-        flex: 0 0 42px;
-        place-items: center;
-        border-radius: 8px;
-        background-color: #e8ecf5;
-        color: #1a56db;
-        font-weight: 700;
-    }
-    .panah { margin-left: auto; color: #1a56db; font-size: 1.25rem; }
     .kartu-ringkasan {
         display: flex;
         min-width: 0;
