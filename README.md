@@ -114,8 +114,14 @@ app-mvc/
    ├─ layout/
    │  ├─ header.php
    │  └─ footer.php
-   └─ mahasiswa/
-      └─ index.php
+   ├─ mahasiswa/
+   │  ├─ index.php
+   │  ├─ tambah.php
+   │  ├─ edit.php
+   │  └─ tidak-ditemukan.php
+   └─ nilai/
+      ├─ index.php
+      └─ tambah.php
 ```
 
 ---
