@@ -17,8 +17,14 @@ class BerandaController
     {
         $totalMahasiswa = (new PdoMahasiswaRepository())->jumlah();
         $totalNilai = (new PdoNilaiRepository())->jumlah();
-        $rentangGrade = (new GradeCalculator())->rentang();
+        $rentangGrade = array_map(
+            static fn(array $rentang): array => $rentang + [
+                'kelas' => 'grade-' . strtolower($rentang['grade']),
+            ],
+            (new GradeCalculator())->rentang()
+        );
         $judul = 'Beranda';
+        $deskripsiHalaman = 'Sistem informasi untuk mengelola mahasiswa, nilai akhir, dan rentang grade.';
         $menuAktif = 'beranda';
 
         require dirname(__DIR__, 2) . '/views/beranda/index.php';
