@@ -116,6 +116,21 @@
             cursor: pointer;
         }
         .empty-msg { color: #888; font-style: italic; }
+        @media (max-width: 480px) {
+            nav {
+                height: auto;
+                min-height: 56px;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: .75rem;
+                padding: .5rem .75rem;
+            }
+            nav .brand { font-size: 1rem; }
+            nav a { font-size: .82rem; }
+            .container { margin: 1rem auto; padding: 0 .75rem; }
+            .card { padding: 1.25rem 1rem; }
+            .aksi-form { flex-wrap: wrap; }
+        }
     </style>
 </head>
 <body>
