@@ -195,6 +195,58 @@ curl -o /dev/null -s -w "%{http_code}" http://localhost:8000/sembarang
 # output: 404
 ```
 
+### Uji GET dan POST dengan Postman
+
+Pastikan MySQL/MariaDB sudah berjalan dan server PHP aktif di `http://localhost:8000`.
+Rute aplikasi mengembalikan halaman HTML, bukan API JSON. Untuk request POST, gunakan
+`x-www-form-urlencoded` (bukan **raw JSON**).
+
+#### GET
+
+1. Buat request baru di Postman, pilih method **GET**, lalu masukkan salah satu URL:
+   - `http://localhost:8000/`
+   - `http://localhost:8000/mahasiswa`
+   - `http://localhost:8000/nilai`
+2. Tekan **Send**. Halaman yang tersedia harus mengembalikan status `200 OK`.
+3. Untuk menguji data yang tidak ditemukan, coba
+   `http://localhost:8000/mahasiswa/edit?id=99999`; statusnya `404`.
+
+#### POST tambah mahasiswa
+
+1. Buat request baru dengan method **POST** dan URL
+   `http://localhost:8000/mahasiswa/simpan`.
+2. Buka **Body** → pilih **x-www-form-urlencoded**, lalu isi:
+
+   | Key | Contoh value |
+   |-----|--------------|
+   | `nim` | `202610000099` |
+   | `nama` | `Uji Postman` |
+   | `prodi` | `Teknik Informatika` |
+
+   Gunakan NIM angka yang belum terdaftar.
+3. Tekan **Send**. Jika berhasil, aplikasi menyimpan data lalu mengarahkan ke
+   `/mahasiswa` dengan status `302 Found`. Postman biasanya mengikuti redirect
+   otomatis dan menampilkan halaman daftar dengan status akhir `200 OK`.
+4. Buka `http://localhost:8000/mahasiswa` dengan method **GET** untuk memastikan
+   data baru muncul. Jika salah satu field dikosongkan atau NIM tidak valid,
+   aplikasi mengembalikan `422 Unprocessable Content` beserta pesan validasi.
+
+#### POST tambah nilai (opsional)
+
+1. Buat request **POST** ke `http://localhost:8000/nilai/simpan`.
+2. Di **Body** → **x-www-form-urlencoded**, isi `mahasiswa_id` dengan ID mahasiswa
+   yang sudah ada, kemudian isi:
+
+   | Key | Contoh value |
+   |-----|--------------|
+   | `mahasiswa_id` | `1` |
+   | `mata_kuliah` | `Pengujian Postman` |
+   | `nilai_akhir` | `85` |
+
+3. Tekan **Send**. Jika valid, aplikasi mengarahkan ke `/nilai`; buka halaman itu
+   dengan method **GET** untuk memastikan nilai tersimpan. Nilai akhir harus antara
+   `0` dan `100`.
+
 ### Uji tambah mahasiswa
 
 1. Buka <http://localhost:8000/mahasiswa>, lalu pilih **Tambah Mahasiswa**.
