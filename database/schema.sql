@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS nilai (
 -- ------------------------------------------------------------
 -- Data contoh mahasiswa (3 baris)
 -- ------------------------------------------------------------
-INSERT INTO mahasiswa (nim, nama, prodi) VALUES
+INSERT IGNORE INTO mahasiswa (nim, nama, prodi) VALUES
     ('202310370311001', 'Andi Pratama',    'Teknik Informatika'),
     ('202310370311002', 'Siti Rahayu',     'Sistem Informasi'),
     ('202310370311003', 'Budi Santoso',    'Teknik Informatika');
@@ -46,10 +46,53 @@ INSERT INTO mahasiswa (nim, nama, prodi) VALUES
 -- ------------------------------------------------------------
 -- Data contoh nilai
 -- ------------------------------------------------------------
-INSERT INTO nilai (mahasiswa_id, mata_kuliah, nilai_akhir) VALUES
-    (1, 'Pemrograman Web',         88.50),
-    (1, 'Basis Data',              91.00),
-    (2, 'Pemrograman Web',         85.00),
-    (2, 'Rekayasa Perangkat Lunak',79.50),
-    (3, 'Pemrograman Web',         92.75);
+INSERT IGNORE INTO nilai (mahasiswa_id, mata_kuliah, nilai_akhir)
+SELECT id, 'Pemrograman Web', 88.50
+FROM mahasiswa
+WHERE nim = '202310370311001'
+  AND NOT EXISTS (
+      SELECT 1 FROM nilai
+      WHERE nilai.mahasiswa_id = mahasiswa.id
+        AND nilai.mata_kuliah = 'Pemrograman Web'
+  );
+
+INSERT IGNORE INTO nilai (mahasiswa_id, mata_kuliah, nilai_akhir)
+SELECT id, 'Basis Data', 91.00
+FROM mahasiswa
+WHERE nim = '202310370311001'
+  AND NOT EXISTS (
+      SELECT 1 FROM nilai
+      WHERE nilai.mahasiswa_id = mahasiswa.id
+        AND nilai.mata_kuliah = 'Basis Data'
+  );
+
+INSERT IGNORE INTO nilai (mahasiswa_id, mata_kuliah, nilai_akhir)
+SELECT id, 'Pemrograman Web', 85.00
+FROM mahasiswa
+WHERE nim = '202310370311002'
+  AND NOT EXISTS (
+      SELECT 1 FROM nilai
+      WHERE nilai.mahasiswa_id = mahasiswa.id
+        AND nilai.mata_kuliah = 'Pemrograman Web'
+  );
+
+INSERT IGNORE INTO nilai (mahasiswa_id, mata_kuliah, nilai_akhir)
+SELECT id, 'Rekayasa Perangkat Lunak', 79.50
+FROM mahasiswa
+WHERE nim = '202310370311002'
+  AND NOT EXISTS (
+      SELECT 1 FROM nilai
+      WHERE nilai.mahasiswa_id = mahasiswa.id
+        AND nilai.mata_kuliah = 'Rekayasa Perangkat Lunak'
+  );
+
+INSERT IGNORE INTO nilai (mahasiswa_id, mata_kuliah, nilai_akhir)
+SELECT id, 'Pemrograman Web', 92.75
+FROM mahasiswa
+WHERE nim = '202310370311003'
+  AND NOT EXISTS (
+      SELECT 1 FROM nilai
+      WHERE nilai.mahasiswa_id = mahasiswa.id
+        AND nilai.mata_kuliah = 'Pemrograman Web'
+  );
 
